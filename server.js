@@ -17,8 +17,8 @@ app.use(express.json());
 app.use(morgan("combined"));
 
 const globalLimiter = ratelimit({
-  windowMs: 15*60*1000, //15 minutos
-  max: 20, //maximo de peticiones por IP
+  windowMs: 10*60*1000, //15 minutos
+  max: 100, //maximo de peticiones por IP
   message: "¡Demasiadas peticiones, intente de nuevo más tarde!"
 });
 
@@ -26,7 +26,7 @@ app.use(globalLimiter);
 
 const loginLimiter = ratelimit({
   windowMs: 10*60*1000, //10 minutos
-  max: 5,
+  max: 10,
   message: "¡Demasiadas peticiones, intente de nuevo más tarde!"
 });
 
