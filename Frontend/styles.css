@@ -1,0 +1,104 @@
+:root {
+	--color-1: rgb(51, 92, 103);
+	--color-2: rgb(255, 243, 176);
+	--color-3: rgb(224, 159, 62);
+	--color-4: rgb(158, 42, 43);
+	--color-5: rgb(84, 11, 14);
+}
+
+* {
+	margin: 0;
+	padding: 0;
+	color: var(--color-6);
+}
+
+body {
+	width: 60%;
+  margin: 0 auto;
+	max-width: 60%;
+	text-align: center;
+	background-color: var(--color-1);
+	font-family: 'Inter', sans-serif;
+}
+
+input {
+	border-radius: 8px;
+	padding: 0.5rem 0.25rem;
+	background-color: var(--color-2);
+	border-color: var(--color-5);
+}
+
+button {
+	border-radius: 12px;
+	padding: 0.5rem 0.75rem;
+	background-color: var(--color-3);
+	cursor: pointer;
+	transition: all ease-in 200ms;
+}
+
+button:hover {
+	background-color: var(--color-4);
+}
+
+button:active {
+	transform: scale(0.95);
+}
+
+/* section  {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	text-align: start;
+	gap: 1rem;
+	padding: 0.5rem;
+}
+section div {
+	display: flex;
+	flex-direction: column;
+} */
+
+.nav-link {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	text-decoration: none;
+	color: var(--color-6);
+}
+
+.nav-icon {
+	width: 2rem;
+	height: 2rem;
+	color: var(--color-6)
+}
+
+.home-title {
+	margin: 4rem 0;
+}
+
+.navigation {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 0.5rem;
+}
+
+.home-cards-container {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 1rem;
+}
+
+.card {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	background-color: var(--color-2);
+	border-radius: 12px;
+	color: var(--color-6);
+	font-size: 1rem;
+	padding: 2rem;
+	box-shadow: 1px 2px 6px rgba(0, 0, 0, 0.3);
+}
