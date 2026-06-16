@@ -7,7 +7,7 @@ const morgan = require("morgan")
 const app = express();
 
 const corsOptions = {
-  origin: ["http://localhost:3000"],
+  origin: ["http://localhost:8080"],
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"]
 }
@@ -260,10 +260,10 @@ app.delete('/productos/:id', verifyToken, authorizationRole(["ADMIN"]), (req, re
     res.json(deletedProduct);
 });
 
-app.listen('3000', (err) => {
-	if (err) return console.error('Hubo un error al levantar el servidor en el puerto 3000.');
+app.listen('3443', (err) => {
+	if (err) return console.error('Hubo un error al levantar el servidor en el puerto 3443.');
 
 	
-	console.log('Servidor en http://localhost:3000');
+	console.log('Servidor en http://localhost:3443');
     
 });
