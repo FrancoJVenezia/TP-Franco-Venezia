@@ -24,23 +24,6 @@ Para generar certificados autofirmados, dentro de la carpeta Backend:
 openssl req -nodes -new -x509 -keyout server.key -out server.crt
 ```
 
-# Frontend
-
-# 1. Entrar al Frontend
-```bash
-cd Frontend
-```
-# 2. Iniciar frontend mediante http-server
-```bash
-http-server
-```
-
-En caso de no tener http-server. Instalarlo.
-# Instalación:
-```bash
-npm install http-server
-```
-
 En el caso de que no funciones bien el front (no te deje hacer peticion al servidor).
 Entrar a:
 
