@@ -1,11 +1,7 @@
 # Backend
 
 ## Instalación
-# 1. Entrar al Backend
-```bash
-cd Backend
-```
-# 2. Instalar las dependencias
+# 1. Instalar las dependencias
 ```bash
 npm install
 ```
@@ -24,7 +20,7 @@ Para generar certificados autofirmados, dentro de la carpeta Backend:
 openssl req -nodes -new -x509 -keyout server.key -out server.crt
 ```
 
-En el caso de que no funciones bien el front (no te deje hacer peticion al servidor).
+En el caso de que no funcione bien el front (no te deje hacer peticion al servidor).
 Entrar a:
 
 https://localhost:3443/
