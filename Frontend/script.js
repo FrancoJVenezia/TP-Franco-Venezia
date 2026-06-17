@@ -7,45 +7,45 @@ document.getElementById("loginForm").addEventListener("submit", async(event) => 
   const user = document.getElementById("username").value
   const pass = document.getElementById("password").value
 
+  let error = "";
+
+  if (!user &&  typeof user == 'string') {
+    error += "El nombre de usuario es requerido. ";
+  }
+  if (user.length < 4 || user.length > 50) {
+    error += "El nombre de usuario debe tener entre 4 y 50 caracteres. "
+  }
+  
+  if (!pass &&  typeof pass == 'string') {
+    error += "La contraseña es requerida. ";
+  }
+
+  if (pass.length < 4 || pass.length > 30) {
+    error += "La contraseña debe tener entre 4 y 30 caracteres. "
+  }
+
+  if (error) {
+    return alert(`Error: ${error}`);
+  }
+
   const response = await fetch(server_domain + "/login", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ username: user, password: pass }),
   });
 
-	const div = document.getElementById("sesionIniciada")
   if (response.ok) {
     const data = await response.json();
-		div.innerHTML = '<p class="success-login">¡Accediste correctamente!</p>'
     Auth.setToken(data.accessToken);
+    alert("¡Accediste correctamente!");
+    showHome();
     console.log("Token almacenado:", Auth.getToken());
   } else {
-		div.innerHTML = '<p class="denied-login">Hubo un error al iniciar sesion.</p>'
+    alert("Hubo un error al iniciar sesion. Revisá el usuario y contraseña y volvé a intentarlo más tarde.")
     console.error("Error en el login");
   }
 })
 
-document.getElementById("login").addEventListener("click", async () => {
-	const user = document.getElementById("username").value
-  const pass = document.getElementById("password").value
-
-  const response = await fetch(server_domain + "/login", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username: user, password: pass }),
-  });
-
-	const div = document.getElementById("sesionIniciada")
-  if (response.ok) {
-    const data = await response.json(); //{ accessToken: token }
-		div.innerHTML = '<p class="success-login">¡Accediste correctamente!</p>'
-    Auth.setToken(data.accessToken); // Guardar el token en memoria
-    console.log("Token almacenado:", Auth.getToken());
-  } else {
-		div.innerHTML = '<p class="denied-login">Hubo un error al iniciar sesion.</p>'
-    console.error("Error en el login");
-  }
-});
 
 // document.getElementById("loginBtn").addEventListener("click", async () => {
   
@@ -98,3 +98,51 @@ document.getElementById("login").addEventListener("click", async () => {
 //   });
 //   console.log("Sesión cerrada");
 // });
+
+const homeContainer     = document.getElementById("homeContainer");
+const loginContainer    = document.getElementById("loginContainer");
+const productsContainer = document.getElementById("productsContainer");
+
+const loginEl = document.getElementById("loginBtn");
+const logoutEl = document.getElementById("logoutBtn");
+
+const allContainers = [homeContainer, loginContainer, productsContainer];
+
+function hideAll() {
+  allContainers.forEach(container => container.classList.add("d-none"));
+  if (Auth.getToken()) {
+    logoutEl.classList.remove("d-none");
+    loginEl.classList.add("d-none");
+  } else {
+    logoutEl.classList.add("d-none");
+    loginEl.classList.remove("d-none");
+  }
+}
+
+function showHome() {
+  hideAll();
+  homeContainer.classList.remove("d-none");
+}
+
+function showLogin() {
+  console.log("funciona=?");
+  hideAll();
+  loginContainer.classList.remove("d-none");
+}
+
+function showProducts() {
+  hideAll();
+  productsContainer.classList.remove("d-none");
+}
+
+function logout() {
+  Auth.clearToken();
+  showHome();
+}
+
+document.getElementById("homeBtn").addEventListener("click", showHome);
+document.getElementById("loginBtn").addEventListener("click", showLogin);
+document.getElementById("homeLoginBtn").addEventListener("click", showLogin);
+document.getElementById("logoutBtn").addEventListener("click", logout);
+document.getElementById("productsBtn").addEventListener("click", showProducts);
+document.getElementById("homeProductsBtn").addEventListener("click", showProducts);

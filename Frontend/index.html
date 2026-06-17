@@ -13,7 +13,7 @@
 <body>
 
 	<header class="navigation">
-		<a class="nav-link" href="http://localhost:8080/">
+		<a id="homeBtn" class="nav-link" href="http://localhost:8080/">
 			<i class="nav-icon">
 				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
 					<path fill="currentColor" d="M280.37 148.26L96 300.11V464a16 16 0 0 0 16 16l112.06-.29a16 16 0 0 0 15.92-16V368a16 16 0 0 1 16-16h64a16 16 0 0 1 16 16v95.64a16 16 0 0 0 16 16.05L464 480a16 16 0 0 0 16-16V300L295.67 148.26a12.19 12.19 0 0 0-15.3 0zM571.6 251.47L488 182.56V44.05a12 12 0 0 0-12-12h-56a12 12 0 0 0-12 12v72.61L318.47 43a48 48 0 0 0-61 0L4.34 251.47a12 12 0 0 0-1.6 16.9l25.5 31A12 12 0 0 0 45.15 301l235.22-193.74a12.19 12.19 0 0 1 15.3 0L530.9 301a12 12 0 0 0 16.9-1.6l25.5-31a12 12 0 0 0-1.7-16.93z"/>
@@ -23,18 +23,31 @@
 				FrancoShop
 			</h3>
 		</a>
-		<a>
-			Productos
-		</a>
 
-		<a>
+		<div style="display: flex; gap: 1rem;">
+			<a id="productsBtn">
+				Productos
+			</a>
+			<a>
+				Acerca de
+			</a>
+			<a>
+				Contacto
+			</a>
+
+		</div>
+
+		<a id="loginBtn">
 			Iniciar sesión
 		</a>
-		<!-- <nav id="navegacion"></nav> -->
+
+		<a id="logoutBtn" class="d-none">
+			Salir
+		</a>
 	</header>
 
 	
-	<main class="home-main">
+	<main id="homeContainer" class="home-main">
 		<div class="home-title">
 			<h1>Bienvenido a FrancoShop</h1>
 			<h3>Tu tienda de confianza</h3>
@@ -43,52 +56,36 @@
 		<div class="home-cards-container">
 			<section class="card">
 				<h4>¿Venis a comprar?	</h4>
-				<a href="/productos">Ver productos.</a>
+				<a id="homeProductsBtn">Ver productos.</a>
 			</section>
 		
 			<section class="card">
 				<h4>¿Sos empleado?</h4>
-				<a href="/login">Iniciar sesión.</a>
+				<a id="homeLoginBtn">Iniciar sesión.</a>
 			</section>
 		</div>
 	</main>
 	<br>
 
-	<form id="loginForm">
-		<label for="username">Usuario:</label>
-		<input type="text" id="username" name="username" required>
 
-		<label for="password">Contraseña:</label>
-		<input type="password" id="password" name="password" required>
+	<div id="loginContainer" class="d-none">
+		<form id="loginForm" class="form-container">
+			<div>
+				<label for="username">Usuario:</label>
+				<input type="text" id="username" name="username" minLength="4" maxlength="50" required>
+			</div>
+			
+			<div>
+				<label for="password">Contraseña:</label>
+				<input type="password" id="password" name="password" minlength="4" maxlength="30" required>
+			</div>
+	
+			<button id="login" type="submit">Iniciar Sesión</button>		
+		</form>
+	</div>
 
-		<button id="login" type="submit" >Iniciar Sesión</button>		
-	</form>
-
-	<div id="sesionIniciada"></div>
-
-	<!-- <form action="/productos" method="POST">
-		<label for="name">Nombre:</label>
-		<input type="text" id="name" name="name" required>
-		<br>
-		<br>
-
-		<label for="price">Precio:</label>
-		<input type="text" id="price" name="price" required>
-		<br>
-		<br>
-
-		<label for="stock">Stock (cant. unidades):</label>
-		<input type="text" id="stock" name="stock" required>
-		<br>
-		<br>
-		
-		<button type="submit">Crear producto</button>
-	</form>
-
-
-	<h2>GET PRODUCTOS</h2>
-
-	<h2>PUT (editar) PRODUCTOS</h2>
-	<h2>DELETE (borrar) PRODUCTOS</h2> -->
+	<div id="productsContainer" class="d-none">
+		Aca irian los productos
+	</div>
 </body>
 </html>
