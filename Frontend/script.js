@@ -1,5 +1,6 @@
 import Auth from './auth.js';
-const server_domain = "https://localhost:3443" 
+import apiRequest from './request.js';
+import { server_domain } from './config.js';
 
 document.getElementById("loginForm").addEventListener("submit", async(event) => {
   event.preventDefault();
@@ -30,6 +31,7 @@ document.getElementById("loginForm").addEventListener("submit", async(event) => 
 
   const response = await fetch(server_domain + "/login", {
     method: "POST",
+    credentials: "include", // Para que el navegador acepte la cookie httpOnly del refresh token
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ username: user, password: pass }),
   });
@@ -132,7 +134,7 @@ function showLogin() {
 async function showProducts() {
   hideAll();
 
-  const response = await fetch(server_domain + "/productos", {
+  const response = await apiRequest(server_domain + "/productos", {
     method: "GET",
     headers: { "Content-Type": "application/json" },
   });
@@ -153,7 +155,15 @@ async function showProducts() {
   productsContainer.classList.remove("d-none");
 }
 
-function logout() {
+async function logout() {
+  try {
+    await fetch(server_domain + "/logout", {
+      method: "POST",
+      credentials: "include", // Para que el backend reciba la cookie y la borre
+    });
+  } catch (error) {
+    console.error("Error al cerrar sesión:", error);
+  }
   Auth.clearToken();
   showHome();
 }
@@ -164,6 +174,16 @@ document.getElementById("homeLoginBtn").addEventListener("click", showLogin);
 document.getElementById("logoutBtn").addEventListener("click", logout);
 document.getElementById("productsBtn").addEventListener("click", showProducts);
 document.getElementById("homeProductsBtn").addEventListener("click", showProducts);
+
+// Al cargar la página, intentamos recuperar la sesión desde la cookie httpOnly.
+// Si hay un refresh token válido, obtenemos un nuevo access token y la barra
+// superior muestra "Salir" en lugar de "Iniciar sesión".
+async function init() {
+  await Auth.refreshToken();
+  showHome();
+}
+
+init();
 
 function construirHtmlProductos(products, perms) {
   let msg = '';
@@ -212,10 +232,14 @@ function deleteProductHtml(productId) {
 }
 
 async function getMe() {
-  const res = await fetch(server_domain + "/me", {
+  if (!Auth.getToken()) return null;
+
+  const res = await apiRequest(server_domain + "/me", {
     method: "GET",
     headers: { "Content-Type": "application/json" }
   });
+
+  if (!res.ok) return null;
 
   return await res.json();
 }

@@ -6,6 +6,16 @@ const loginLimiter = require("../middleware/loginRateLimit");
 
 const router = express.Router();
 
+// base de datos de refresh tokens validos
+let refreshTokens = [];
+
+const refreshCookieOptions = {
+  httpOnly: true,
+  secure: true,
+  sameSite: "None", // front 8080 y back 3443
+  maxAge: 1000 * 60 * 60 * 24 * 7 // 7 días
+};
+
 //Post de logueo(generamos un token)
 router.post("/login", loginLimiter, (req,res)=>{
 
@@ -28,10 +38,16 @@ router.post("/login", loginLimiter, (req,res)=>{
       const user = users[i];
 
       if (normalizedUsername == user.username && normalizedPassword == user.password){
-        const token = jwt.sign({ id: user.id, role: user.role, username: user.username, name: user.name }, tokenConfig.SECRET_KEY, { expiresIn: tokenConfig.expiresIn });
+        const payload = { id: user.id, role: user.role, username: user.username, name: user.name };
+
+        const accessToken = jwt.sign(payload, tokenConfig.SECRET_KEY, { expiresIn: tokenConfig.expiresIn });
+        const refreshToken = jwt.sign(payload, tokenConfig.REFRESH_SECRET_KEY, { expiresIn: tokenConfig.refreshExpiresIn });
+
+        refreshTokens.push(refreshToken);
+        res.cookie("refreshToken", refreshToken, refreshCookieOptions);
 
         console.log(`[POST] login. Se ha iniciado sesion correctamente, ${user.name} (${user.role})`);
-        return res.json({ accessToken: token })
+        return res.json({ accessToken })
       }
     }
 
@@ -39,8 +55,44 @@ router.post("/login", loginLimiter, (req,res)=>{
 
 });
 
+router.post("/refresh-token", (req, res) => {
+    const refreshToken = req.cookies.refreshToken;
+    if (!refreshToken) return res.status(401).json({ message: "No autorizado" });
+
+    if (!refreshTokens.includes(refreshToken)) {
+      return res.status(403).json({ message: "Refresh Token inválido" });
+    }
+
+    jwt.verify(refreshToken, tokenConfig.REFRESH_SECRET_KEY, (err, decoded) => {
+      if (err) {
+        refreshTokens = refreshTokens.filter((token) => token !== refreshToken);
+        return res.status(403).json({ message: "Refresh Token inválido" });
+      }
+
+      const accessToken = jwt.sign(
+        { id: decoded.id, role: decoded.role, username: decoded.username, name: decoded.name },
+        tokenConfig.SECRET_KEY,
+        { expiresIn: tokenConfig.expiresIn }
+      );
+      res.json({ accessToken });
+    });
+});
+
 
 router.post("/logout", (req, res) => {
+    const refreshToken = req.cookies.refreshToken;
+
+    if (refreshToken) {
+      refreshTokens = refreshTokens.filter((token) => token !== refreshToken);
+    }
+
+    res.clearCookie("refreshToken", {
+      httpOnly: true,
+      secure: true,
+      sameSite: "None"
+    });
+
+    res.json({ message: "Sesión cerrada" });
 });
 
 
